@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Bahçe">
+<meta name="theme-color" content="#1B2A4A">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="manifest" href="manifest.webmanifest">
+<title>Scarlet Elma Bahçesi</title>
+<style>
+:root{
+  --kagit:#F7F6F3; --kart:#FFFFFF; --murekkep:#1B2A4A; --soluk:#5A6880;
+  --bakir:#A5471E; --bakir-zemin:#FBEEE8; --yaprak:#2F6B4F; --yaprak-zemin:#EAF2ED;
+  --cizgi:#E2DFD8; --golge:0 1px 2px rgba(27,42,74,.06),0 4px 12px rgba(27,42,74,.05);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  background:var(--kagit); color:var(--murekkep);
+  font:400 17px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  padding-bottom:calc(74px + env(safe-area-inset-bottom));
+  -webkit-text-size-adjust:100%;
+}
+.sar{max-width:640px;margin:0 auto;padding:0 14px}
+
+/* ---- ÜST ---- */
+header{
+  background:var(--murekkep); color:#fff;
+  padding:calc(12px + env(safe-area-inset-top)) 0 12px;
+  position:sticky; top:0; z-index:20;
+}
+header h1{margin:0;font-size:17px;font-weight:700;letter-spacing:.02em}
+header .alt{margin:2px 0 0;font-size:13px;opacity:.7}
+.kural{
+  display:flex;align-items:center;gap:10px;margin-top:10px;
+  background:rgba(255,255,255,.1);border-radius:10px;padding:9px 12px;
+}
+.kural b{font-size:20px;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.kural span{font-size:12.5px;line-height:1.3;opacity:.85}
+
+/* ---- EVRE ŞERİDİ (imza) ---- */
+.evre-blok{background:var(--kart);border:1px solid var(--cizgi);border-radius:14px;padding:16px 14px 14px;margin:16px 0;box-shadow:var(--golge)}
+.evre-ust{font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--soluk);margin-bottom:6px}
+.evre-ad{font-size:26px;font-weight:800;letter-spacing:-.02em;line-height:1.15;margin-bottom:14px}
+.serit{display:flex;gap:3px;margin-bottom:8px}
+.serit i{flex:1;height:7px;border-radius:4px;background:var(--cizgi);display:block}
+.serit i.gecti{background:#C3CBD8}
+.serit i.simdi{background:var(--bakir)}
+.serit-alt{display:flex;justify-content:space-between;font-size:11px;color:var(--soluk)}
+
+/* ---- KARTLAR ---- */
+h2.bolum{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--soluk);margin:22px 0 10px;font-weight:700}
+.is{
+  background:var(--kart);border:1px solid var(--cizgi);border-radius:14px;
+  margin-bottom:10px;box-shadow:var(--golge);overflow:hidden;
+}
+.is.kritik{border-color:#EBC4B4;background:var(--bakir-zemin)}
+.is.bitti{opacity:.55}
+.is-bas{display:flex;gap:12px;padding:14px;cursor:pointer;align-items:flex-start}
+.kutu{
+  flex:0 0 28px;width:28px;height:28px;border:2px solid var(--cizgi);border-radius:8px;
+  background:#fff;display:grid;place-items:center;margin-top:1px;
+}
+.kutu.dolu{background:var(--yaprak);border-color:var(--yaprak)}
+.kutu svg{width:16px;height:16px;stroke:#fff;stroke-width:3;fill:none;display:none}
+.kutu.dolu svg{display:block}
+.is-ort{flex:1;min-width:0}
+.is-tarih{font-size:12px;color:var(--soluk);font-variant-numeric:tabular-nums}
+.is.kritik .is-tarih{color:var(--bakir)}
+.is-ad{font-size:17.5px;font-weight:700;letter-spacing:-.01em;margin:1px 0 4px;line-height:1.25}
+.rozet{display:inline-block;font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px;background:#EEF1F5;color:var(--soluk);margin-right:5px}
+.rozet.p{background:#E7EEF9;color:#2C4C7C}
+.rozet.d{background:#E9F1EC;color:var(--yaprak)}
+.rozet.e{background:#F2EFE6;color:#7A6636}
+.ok{flex:0 0 20px;color:var(--soluk);font-size:19px;line-height:1;margin-top:4px;transition:transform .18s}
+.is.acik .ok{transform:rotate(90deg)}
+.is-ic{display:none;padding:0 14px 16px 54px;border-top:1px solid var(--cizgi);margin-top:-1px;padding-top:14px}
+.is.acik .is-ic{display:block}
+.is-ic ol{margin:0;padding-left:20px}
+.is-ic li{margin-bottom:8px;line-height:1.45}
+.urunler{background:#F4F6F9;border-radius:10px;padding:10px 12px;margin-bottom:12px;font-size:15.5px}
+.is.kritik .urunler{background:#fff}
+.urunler b{display:block;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--soluk);margin-bottom:5px;font-weight:700}
+.neden{margin-top:12px;padding:11px 12px;background:#F4F6F9;border-radius:10px;font-size:15px;line-height:1.45}
+.is.kritik .neden{background:#fff}
+.neden b{color:var(--bakir)}
+
+/* ---- HESAP ---- */
+.kutucuk{background:var(--kart);border:1px solid var(--cizgi);border-radius:14px;padding:16px;margin-bottom:14px;box-shadow:var(--golge)}
+.kutucuk h3{margin:0 0 4px;font-size:19px;font-weight:800;letter-spacing:-.01em}
+.kutucuk p.ac{margin:0 0 14px;font-size:14.5px;color:var(--soluk);line-height:1.45}
+label{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--soluk);font-weight:700;margin-bottom:6px}
+input,select{
+  width:100%;font:inherit;font-size:17px;padding:12px 13px;border:1.5px solid var(--cizgi);
+  border-radius:11px;background:#fff;color:var(--murekkep);margin-bottom:13px;
+}
+input:focus,select:focus{outline:2px solid var(--murekkep);outline-offset:1px;border-color:var(--murekkep)}
+.sonuc{background:var(--murekkep);color:#fff;border-radius:12px;padding:16px;text-align:center}
+.sonuc .buyuk{font-size:34px;font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1.1}
+.sonuc .kucuk{font-size:13px;opacity:.75;margin-top:4px}
+.sonuc.uyari{background:var(--bakir)}
+.sonuc.iyi{background:var(--yaprak)}
+
+/* depo sırası */
+.sira{counter-reset:s;list-style:none;margin:0;padding:0}
+.sira li{counter-increment:s;display:flex;gap:12px;padding:11px 0;border-bottom:1px solid var(--cizgi);font-size:15.5px;line-height:1.4}
+.sira li:last-child{border-bottom:0}
+.sira li::before{
+  content:counter(s);flex:0 0 26px;height:26px;border-radius:8px;background:var(--murekkep);color:#fff;
+  display:grid;place-items:center;font-size:13px;font-weight:700
+}
+.sira li.son::before{background:var(--bakir)}
+
+table{width:100%;border-collapse:collapse;font-size:15px}
+th,td{text-align:left;padding:9px 4px;border-bottom:1px solid var(--cizgi);vertical-align:top}
+th{font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--soluk)}
+td.sag{text-align:right;font-variant-numeric:tabular-nums;font-weight:700;white-space:nowrap}
+
+.acil{background:var(--bakir);color:#fff;border-radius:14px;padding:16px;text-align:center;margin-bottom:14px}
+.acil .no{font-size:30px;font-weight:800;letter-spacing:.02em}
+.acil a{color:#fff}
+
+.kurallar{list-style:none;margin:0;padding:0;counter-reset:k}
+.kurallar li{counter-increment:k;display:flex;gap:12px;padding:13px 0;border-bottom:1px solid var(--cizgi);font-size:15.5px;line-height:1.45}
+.kurallar li:last-child{border-bottom:0}
+.kurallar li::before{content:counter(k);flex:0 0 24px;height:24px;border-radius:50%;background:var(--bakir-zemin);color:var(--bakir);display:grid;place-items:center;font-size:12px;font-weight:700}
+
+/* ---- ALT MENÜ ---- */
+nav{
+  position:fixed;left:0;right:0;bottom:0;z-index:30;background:rgba(255,255,255,.96);
+  backdrop-filter:saturate(180%) blur(14px);border-top:1px solid var(--cizgi);
+  padding-bottom:env(safe-area-inset-bottom);
+}
+nav .ic{max-width:640px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr)}
+nav button{
+  background:none;border:0;padding:9px 0 10px;font:inherit;font-size:11px;font-weight:600;
+  color:var(--soluk);display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;
+}
+nav button svg{width:23px;height:23px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+nav button.act{color:var(--murekkep)}
+nav button.act svg{stroke-width:2.2}
+
+.sayfa{display:none}
+.sayfa.act{display:block;animation:gir .2s ease}
+@keyframes gir{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ---- KURULUM KARTI ---- */
+.kur{background:var(--murekkep);color:#fff;border-radius:14px;padding:16px;margin:16px 0;box-shadow:var(--golge)}
+.kur[hidden]{display:none}
+.kur-bas{display:flex;gap:13px;align-items:flex-start;margin-bottom:12px}
+.kur-ikon{flex:0 0 38px;height:38px;border-radius:11px;background:rgba(255,255,255,.14);display:grid;place-items:center}
+.kur-ikon svg{width:21px;height:21px;stroke:#fff;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.kur b{font-size:16.5px;display:block;letter-spacing:-.01em}
+.kur p{margin:2px 0 0;font-size:13.5px;opacity:.75;line-height:1.4}
+.kur ol{margin:0;padding-left:20px;font-size:15px;line-height:1.5}
+.kur ol li{margin-bottom:7px}
+.kur ol li b{display:inline;font-size:15px}
+.kur-kapat{width:100%;margin-top:14px;padding:11px;border:0;border-radius:10px;background:rgba(255,255,255,.16);color:#fff;font:inherit;font-size:15px;font-weight:600;cursor:pointer}
+.kur-kapat:active{background:rgba(255,255,255,.26)}
+body.tamekran header{padding-top:calc(20px + env(safe-area-inset-top))}
+.dip{font-size:13px;color:var(--soluk);line-height:1.5;padding:18px 0 26px;text-align:center}
+
+/* ---- YIL HARİTASI ---- */
+.yil{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:0 0 8px}
+.ayk{background:var(--kart);border:1px solid var(--cizgi);border-radius:12px;padding:9px 10px 8px;cursor:pointer;box-shadow:var(--golge)}
+.ayk b{display:block;font-size:11.5px;letter-spacing:.07em;color:var(--soluk)}
+.ayk.simdi{border-color:var(--bakir);background:var(--bakir-zemin)}
+.ayk.simdi b{color:var(--bakir)}
+.noktalar{display:flex;flex-wrap:wrap;gap:3px;margin-top:6px;min-height:10px}
+.noktalar i{width:10px;height:10px;border-radius:3px;background:#B08A2E}
+.noktalar i.p{background:#2C4C7C}
+.noktalar i.d{background:var(--yaprak)}
+.lejant{display:flex;gap:14px;font-size:12px;color:var(--soluk);margin:0 2px 16px;flex-wrap:wrap}
+.lejant i{width:10px;height:10px;border-radius:3px;display:inline-block;margin-right:5px;vertical-align:-1px}
+
+/* ---- KAYIT DEFTERİ ---- */
+textarea{width:100%;font:inherit;font-size:17px;padding:12px 13px;border:1.5px solid var(--cizgi);border-radius:11px;background:#fff;color:var(--murekkep);margin-bottom:13px;resize:vertical}
+textarea:focus{outline:2px solid var(--murekkep);outline-offset:1px;border-color:var(--murekkep)}
+.btn{width:100%;padding:14px;border:0;border-radius:12px;background:var(--murekkep);color:#fff;font:inherit;font-size:16px;font-weight:700;cursor:pointer}
+.btn:active{opacity:.85}
+.btn.ikincil{background:#EEF1F5;color:var(--murekkep)}
+.btn.tamam{background:var(--yaprak)}
+.kyt{border:1px solid var(--cizgi);border-radius:12px;padding:12px;margin-bottom:10px}
+.kyt-ust{display:flex;justify-content:space-between;font-size:13px;color:var(--soluk);font-variant-numeric:tabular-nums}
+.kyt-ad{font-weight:700;font-size:16.5px;margin:2px 0 3px}
+.kyt-u{font-size:14.5px;color:var(--soluk);line-height:1.4}
+.kyt-sil{margin-top:9px;padding:7px 12px;border:1px solid var(--cizgi);border-radius:9px;background:#fff;color:var(--bakir);font:inherit;font-size:13px;font-weight:600;cursor:pointer}
+.kyt-sil.onay{background:var(--bakir);color:#fff;border-color:var(--bakir)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="sar">
+    <h1>SCARLET ELMA BAHÇESİ</h1>
+    <p class="alt">Yahyalı / Kopçu · 16 dekar · 2.750 ağaç</p>
+    <div class="kural">
+      <b>×20</b>
+      <span>Etikette “100 litreye şu kadar” yazıyorsa<br>o rakamı <b style="font-size:13px">20 ile çarpın</b> — bir ilaçlama 2.000 litre.</span>
+    </div>
+  </div>
+</header>
+
+<main class="sar">
+
+<!-- ============ BUGÜN ============ -->
+<section id="s-bugun" class="sayfa act">
+  <div class="kur" id="kurKart" hidden>
+    <div class="kur-bas">
+      <div class="kur-ikon"><svg viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M12 6v7M9 10l3-3 3 3"/></svg></div>
+      <div>
+        <b>Ana ekrana ekleyin</b>
+        <p>Uygulama gibi tam ekran açılır, internet gerekmez.</p>
+      </div>
+    </div>
+    <ol id="kurAdim"></ol>
+    <button class="kur-kapat" id="kurSimdi" hidden style="background:#fff;color:#1B2A4A">Uygulamayı şimdi kur</button>
+    <button class="kur-kapat" id="kurKapat">Anladım, gizle</button>
+  </div>
+  <div class="evre-blok">
+    <div class="evre-ust">Ağaç şu an</div>
+    <div class="evre-ad" id="evreAd">—</div>
+    <div class="serit" id="serit"></div>
+    <div class="serit-alt"><span>Kış uykusu</span><span>Çiçek</span><span>Hasat</span></div>
+  </div>
+  <h2 class="bolum" id="basBugun">Şimdi yapılacaklar</h2>
+  <div id="listBugun"></div>
+  <h2 class="bolum">Sırada</h2>
+  <div id="listSonra"></div>
+</section>
+
+<!-- ============ TAKVİM ============ -->
+<section id="s-takvim" class="sayfa">
+  <h2 class="bolum" style="margin-top:16px">Yıl haritası — aya dokunun</h2>
+  <div class="yil" id="yilHarita"></div>
+  <div class="lejant"><span><i style="background:#2C4C7C"></i>Püskürtme</span><span><i style="background:#2F6B4F"></i>Damla / serpme</span><span><i style="background:#B08A2E"></i>El işi / diğer</span></div>
+  <div id="listTakvim"></div>
+  <p class="dip">Tarihler yaklaşıktır. Bahar erken veya geç gelirse takvime değil, ağacın evresine bakın.</p>
+</section>
+
+<!-- ============ DEPO ============ -->
+<section id="s-depo" class="sayfa">
+  <div class="kutucuk">
+    <h3>Reçete — depo karışımı</h3>
+    <p class="ac">İşi ve deponuzun hacmini seçin; her ürünün miktarını ve depoya koyma sırasını hesaplar.</p>
+    <label for="recIs">Hangi iş</label>
+    <select id="recIs"></select>
+    <label for="recDepo">Deponuzun hacmi (litre)</label>
+    <select id="recDepo">
+      <option value="2000" selected>2.000 litre</option>
+      <option value="2500">2.500 litre</option>
+      <option value="1600">1.600 litre</option>
+      <option value="1200">1.200 litre</option>
+      <option value="1000">1.000 litre</option>
+      <option value="800">800 litre</option>
+      <option value="600">600 litre</option>
+      <option value="400">400 litre</option>
+      <option value="ozel">Başka — elle gir</option>
+    </select>
+    <input id="recOzel" type="number" inputmode="numeric" placeholder="Depo hacmi, litre" hidden>
+    <div id="recSonuc"></div>
+  </div>
+  <div class="kutucuk">
+    <h3>Doz hesapla</h3>
+    <p class="ac">Kutunun üstünde “100 litreye kaç” yazıyorsa onu girin.</p>
+    <label for="etiket">Etiket dozu (100 litre için)</label>
+    <input id="etiket" type="number" inputmode="decimal" placeholder="örn. 250" step="any">
+    <label for="depo">Toplam su (litre)</label>
+    <select id="depo">
+      <option value="2000">2.000 litre — normal ilaçlama</option>
+      <option value="2500">2.500 litre — kış ilaçlaması</option>
+      <option value="1000">1.000 litre — yarım depo</option>
+      <option value="500">500 litre</option>
+    </select>
+    <div class="sonuc" id="dozSonuc"><div class="buyuk">—</div><div class="kucuk">Etiket dozunu girin</div></div>
+  </div>
+
+  <div class="kutucuk">
+    <h3>Karışır mı?</h3>
+    <p class="ac">İki ürünü seçin.</p>
+    <label for="u1">Birinci ürün</label><select id="u1"></select>
+    <label for="u2">İkinci ürün</label><select id="u2"></select>
+    <div class="sonuc" id="karisimSonuc"><div class="buyuk">—</div><div class="kucuk">İki ürün seçin</div></div>
+  </div>
+
+  <div class="kutucuk">
+    <h3>Depoya koyma sırası</h3>
+    <p class="ac">Sıra değişirse ilaç bozulur, memeler tıkanır.</p>
+    <ol class="sira">
+      <li>Depoyu yarıya doldur, <b>karıştırıcıyı aç</b> — depo boşalana kadar durmaz</li>
+      <li><b>Su düzenleyici</b> (varsa) — kireçli suda ilk bu girer</li>
+      <li><b>Gübreler</b>: kalsiyum, bor, çinko. Ayrı kovada eritip süzerek dök</li>
+      <li><b>Toz ilaç</b>: 10 litre suyla kovada <b>lapa</b> yap, süzgeçten dök. Asla doğrudan dökme</li>
+      <li><b>Sıvı ilaç</b>: ölçekle ölç, şişeyi 2 kez çalkala</li>
+      <li>Suyu tamamla</li>
+      <li class="son"><b>Yayıcı yapıştırıcı — en son.</b> Erken koyarsan depo taşar</li>
+    </ol>
+  </div>
+
+  <div class="kutucuk">
+    <h3>Yıllık miktarlar</h3>
+    <p class="ac">Standart yıl, 16 dekar.</p>
+    <table>
+      <tr><th>Ürün</th><th style="text-align:right">Miktar</th></tr>
+      <tr><td>Kaptan %50 WP</td><td class="sag">45 kg</td></tr>
+      <tr><td>Kış yağı <em>(kısılmaz)</em></td><td class="sag">50 L</td></tr>
+      <tr><td>Bakır hidroksit</td><td class="sag">5 kg</td></tr>
+      <tr><td>Gölleme: kükürt + kireç</td><td class="sag">50 + 25 kg</td></tr>
+      <tr><td>Kalsiyum klorür</td><td class="sag">40 kg</td></tr>
+      <tr><td>Regalis</td><td class="sag">2,5 kg</td></tr>
+      <tr><td>Üre</td><td class="sag">150 kg</td></tr>
+      <tr><td>Potasyum sülfat</td><td class="sag">300 kg</td></tr>
+      <tr><td>Amonyum sülfat</td><td class="sag">250 kg</td></tr>
+      <tr><td>TSP</td><td class="sag">150 kg</td></tr>
+      <tr><td>Bor / şelatlı çinko</td><td class="sag">6 / 2,5 kg</td></tr>
+      <tr><td>Yayıcı yapıştırıcı</td><td class="sag">6 L</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ============ KAYIT ============ -->
+<section id="s-kayit" class="sayfa">
+  <div class="kutucuk" style="margin-top:16px">
+    <h3>Yeni kayıt</h3>
+    <p class="ac">Her ilaçlamadan sonra iki dakikada doldurun — Meysu'nun istediği ilaçlama kaydı telefonunuzda hazır olur.</p>
+    <label for="kytTarih">Tarih</label>
+    <input id="kytTarih" type="date">
+    <label for="kytIs">Ne yapıldı</label>
+    <select id="kytIs"></select>
+    <label for="kytUrun">Atılanlar (ürün + miktar)</label>
+    <textarea id="kytUrun" rows="2" placeholder="örn. Kaptan 5 kg + yayıcı 500 cc"></textarea>
+    <label for="kytSu">Toplam su (litre)</label>
+    <input id="kytSu" type="number" inputmode="numeric" placeholder="2000">
+    <label for="kytNot">Not (isteğe bağlı)</label>
+    <input id="kytNot" type="text" placeholder="örn. hava açık, sabah atıldı">
+    <button class="btn" id="kytEkle">Kaydet</button>
+  </div>
+  <div class="kutucuk">
+    <h3>Kayıtlar</h3>
+    <p class="ac" id="kytSayi"></p>
+    <div id="kytListe"></div>
+    <button class="btn ikincil" id="kytPaylas">Kayıtları paylaş / kopyala</button>
+  </div>
+</section>
+
+<!-- ============ BİLGİ ============ -->
+<section id="s-bilgi" class="sayfa">
+  <div class="acil">
+    <div style="font-size:12px;letter-spacing:.09em;opacity:.85">ACİL · ZEHİR DANIŞMA</div>
+    <div class="no"><a href="tel:112">112</a> · <a href="tel:114">114</a></div>
+    <div style="font-size:13px;opacity:.9;margin-top:6px">Cilde sıçradı veya göze kaçtı: 15 dakika yıka.<br>Yutuldu: <b>kusturma</b>, ilaç kutusunu yanına al.</div>
+  </div>
+
+  <div class="kutucuk">
+    <h3>Değişmeyen 7 kural</h3>
+    <ol class="kurallar">
+      <li><b>Bakır ve gölleme sadece kışın</b>, gözler açılmadan. Fare kulağından sonra çiçeği yakar.</li>
+      <li><b>Çiçek açtığında böcek ilacı yok.</b> Arı ölürse bu çeşit tek elma tutmaz.</li>
+      <li><b>Toprağa azot ekimden mayısa kadar yok</b>, 30 Haziran'da biter. Ekimde yaprağa üre bu yasağa girmez.</li>
+      <li><b>Kalsiyum damladan verilmez</b>, Regalis ile karıştırılmaz.</li>
+      <li><b>Dalı kesme, eğ.</b> Kuvvetli ağaçta budamak daha çok dal çıkarır. İpler şubatta sökülür.</li>
+      <li><b>Piretroit alma.</b> Kızıl örümceğin doğal düşmanını öldürür, örümcek daha da patlar.</li>
+      <li><b>İlaçlama 08:00-10:00</b>, çiy kalkarken. Islak yaprakta ilaç tutunmaz.</li>
+    </ol>
+  </div>
+
+  <div class="kutucuk">
+    <h3>Gölleme bulamacı</h3>
+    <p class="ac">Bir kazan = 100 litre. Bahçenin tamamı için 2,5 kazan.</p>
+    <table>
+      <tr><td>Toz kükürt</td><td class="sag">20 kg</td></tr>
+      <tr><td><b>Sönmemiş</b> kireç</td><td class="sag">10 kg</td></tr>
+      <tr><td>Su</td><td class="sag">100-120 L</td></tr>
+    </table>
+    <ol class="sira" style="margin-top:14px">
+      <li>Suyun yarısını kazana koy, kaynat</li>
+      <li>Kükürdü ayrı kapta az suyla <b>lapa</b> yap</li>
+      <li><b>Sönmemiş kireci yavaş yavaş ekle</b> — şiddetli kaynar ve sıçrar, yüz siperi şart</li>
+      <li>Kükürt lapasını dök, sürekli karıştır</li>
+      <li>Kalan suyu ekle, <b>45-60 dakika kaynat</b></li>
+      <li>Renk <b>koyu kiremit</b> olunca hazır. Sarı kalıyorsa pişmemiştir</li>
+      <li>Soğut, süz. Dipteki çamuru kullanma</li>
+      <li class="son">Ağzı sıkı kapalı sakla — hava alırsa bozulur</li>
+    </ol>
+    <div class="neden"><b>Kullanım:</b> 100 litre suya 8-10 litre bulamaç. Ev yapımı bulamacın yoğunluğu değişir — bomemetre ile ölçün veya bölgede bu işi yapan bir ustaya sorun.</div>
+    <div class="neden" style="background:var(--bakir-zemin)"><b>Güvenlik:</b> Açık havada, yüz siperi ve kalın eldivenle. Bakır veya alüminyum kazan kullanmayın. Rüzgârı arkanıza alın — kükürtlü buhar zehirlidir. Yanınızda bol temiz su bulundurun.</div>
+  </div>
+
+  <div class="kutucuk">
+    <h3>Kasırga ayarı</h3>
+    <table>
+      <tr><td>Hız</td><td class="sag">4-5 km/saat</td></tr>
+      <tr><td>Kuyruk mili</td><td class="sag">540 devir</td></tr>
+      <tr><td>Sıra geçişi</td><td class="sag">Her sıraya gir</td></tr>
+      <tr><td>Üst memeler</td><td class="sag">Tepeyi geçeni kapat</td></tr>
+      <tr><td>Saat</td><td class="sag">08:00-10:00</td></tr>
+    </table>
+  </div>
+
+  <div class="kutucuk">
+    <h3>Ana ekrana ekleme</h3>
+    <p class="ac">Uygulama simgesi kaybolursa veya yeni bir telefona kuracaksanız.</p>
+    <ol class="sira" id="kurAdim2"></ol>
+  </div>
+
+  <div class="kutucuk">
+    <h3>Bayide ne isteyeceksiniz</h3>
+    <table>
+      <tr><th>Etkili madde</th><th style="text-align:right">Bilinen adı</th></tr>
+      <tr><td>Kaptan %50 WP</td><td class="sag">Merpan</td></tr>
+      <tr><td>Bakır hidroksit</td><td class="sag">Kocide</td></tr>
+      <tr><td>Heksitiazoks</td><td class="sag">Nissorun</td></tr>
+      <tr><td>Etoksazol</td><td class="sag">Zoom</td></tr>
+      <tr><td>Klorantraniliprol</td><td class="sag">Coragen</td></tr>
+      <tr><td>Spinetoram</td><td class="sag">Delegate</td></tr>
+      <tr><td>Proheksadion-Ca</td><td class="sag">Regalis</td></tr>
+      <tr><td>Bor</td><td class="sag">Etidot-67</td></tr>
+    </table>
+    <div class="neden">Bunlar tavsiye değil, <b>tercüme listesidir.</b> Bayiye markayı değil etkili maddeyi söyleyin, ruhsatlı ve uygun fiyatlı olanı o versin. <b>Reçetesiz almayın.</b></div>
+  </div>
+  <p class="dip">Sürüm 2 · Temmuz 2026 · İlk açılıştan sonra internetsiz çalışır.</p>
+</section>
+
+</main>
+
+<nav>
+  <div class="ic">
+    <button class="act" data-s="bugun" aria-label="Bugün">
+      <svg viewBox="0 0 24 24"><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M18.4 5.6L17 7M7 17l-1.4 1.4"/><circle cx="12" cy="12" r="4"/></svg>
+      Bugün</button>
+    <button data-s="takvim" aria-label="Takvim">
+      <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+      Takvim</button>
+    <button data-s="depo" aria-label="Depo">
+      <svg viewBox="0 0 24 24"><path d="M5 8h14l-1.2 11.2a2 2 0 0 1-2 1.8H8.2a2 2 0 0 1-2-1.8Z"/><path d="M9 8V5a3 3 0 0 1 6 0v3M7 14h10"/></svg>
+      Depo</button>
+    <button data-s="kayit" aria-label="Kayıt">
+      <svg viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4a3 3 0 0 1 6 0M9 10h6M9 14h6M9 18h3"/></svg>
+      Kayıt</button>
+    <button data-s="bilgi" aria-label="Bilgi">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.5v.5"/></svg>
+      Bilgi</button>
+  </div>
+</nav>
+
+<script>
+/* ---------- EVRELER ---------- */
+const EVRELER=[
+ {ad:"Kış uykusu",b:[12,15],s:[3,1]},{ad:"Göz kabarması",b:[3,1],s:[3,22]},
+ {ad:"Fare kulağı",b:[3,22],s:[4,1]},{ad:"Yeşil rozet",b:[4,1],s:[4,10]},
+ {ad:"Pembe tomurcuk",b:[4,10],s:[4,17]},{ad:"Çiçek",b:[4,17],s:[4,26]},
+ {ad:"Taç yaprak dökümü",b:[4,26],s:[5,6]},{ad:"Fındık büyüklüğü",b:[5,6],s:[6,1]},
+ {ad:"Ceviz büyüklüğü",b:[6,1],s:[7,1]},{ad:"Meyve irileşmesi",b:[7,1],s:[8,20]},
+ {ad:"Ben düşme",b:[8,20],s:[9,12]},{ad:"Hasat",b:[9,12],s:[10,1]},
+ {ad:"Yaprak dökümü",b:[10,1],s:[12,15]}
+];
+function evreIndeks(d){
+  const g=(d.getMonth()+1)*100+d.getDate();
+  for(let i=0;i<EVRELER.length;i++){
+    const e=EVRELER[i],b=e.b[0]*100+e.b[1],s=e.s[0]*100+e.s[1];
+    if(b<s){if(g>=b&&g<s)return i}else{if(g>=b||g<s)return i}
+  }
+  return 0;
+}
+
+/* ---------- İŞLER ---------- */
+const P="Püskürtme",D="Damla",S="Serpme",T="Traktör",E="El işi",Y="—";
+const ISLER=[
+{a:7,g:22,son:28,t:"22-28 Temmuz",e:"Sürgün uzuyor",ad:"1. İlaçlama + Akar",y:P,k:1,yil:2026,
+ u:["Kaptan 5 kg","Akar ilacı 1 depo dozu","Yayıcı 500 cc"],
+ s:["Bir gün önce sıra arasını biç.","Depoyu yarıya doldur, karıştırıcıyı aç.","Kaptanı kovada lapa yap, süzgeçten dök.","Akar ilacını ekle.","Suyu 2.000 litreye tamamla, yayıcı en son.","08:00-10:00 arası at. Yaprağın ALTINI ıslat."],
+ n:"Meyve var — akar ilacının kutusundaki hasat aralığını kontrol et."},
+{a:8,g:5,son:25,t:"5-25 Ağustos",e:"Sürgün durdu, dal esnek",ad:"Dal eğme (seçici)",y:E,k:1,
+ u:["İp 8 kg","5 işçi × 1 gün"],
+ s:["Sıra boyunca yürü. Meyvesi hiç olmayan + tepesi dimdik ağaçları seç.","Meyve tutmuş ağacı geç — meyvenin ağırlığı dalı zaten eğer.","Lidere dokunma. 3 yan dal seç.","Kalan dikey dalları eğme, dipten kes.","İpi gövde dibine bağla, her dalın üstünden geçirip aşağı çek.","Dal yatayın ALTINA insin — saat 4 gibi.","Tepede düğümle. Bir ağaç 60-90 saniye."],
+ n:"İpler ŞUBATTA sökülecek — yoksa dalı boğar."},
+{a:8,g:8,son:15,t:"8-15 Ağustos",e:"Sürgün durdu",ad:"2. İlaçlama",y:P,yil:2026,
+ u:["Kaptan 5 kg"],s:["Sıra arasını biç.","Kaptanı lapa yapıp dök, suyu tamamla, yayıcı en son.","Akar ilacı tekrar gerekmez — temmuzdaki hâlâ etkili."]},
+{a:9,g:15,son:30,t:"15-30 Eylül",e:"Elma olgunlaştı",ad:"HASAT",y:E,k:1,
+ u:["12 kişi × 5 gün","Eczaneden iyot"],
+ s:["Haftada bir iyot testi: 10 elmayı enine kes, iyot damlat, 1 dakika bekle.","Mavi-siyah = ham. Sarı = olgun. Yarısından fazlası sarıysa hasat zamanı.","Sabah serininde topla.","Çevirerek kopar, çekme — sap elmada kalsın.","Her sabah ağaç altına bak, dökülme başladıysa bekleme."],
+ n:"Meysu'ya gidecekse leke ve irilik sorun değil. İlaçlama kayıtlarını hazır tut."},
+{a:9,g:25,son:5,t:"25 Eyl - 5 Ekim",e:"Yaprak hâlâ yeşil",ad:"Hasat sonrası ilaçlama",y:P,k:1,
+ u:["Kaptan 5 kg"],s:["Kaptan 5 kg, tek başına."],
+ n:"Bu ilaçlama meyve için değil YAPRAK için. Yaprak erken dökülürse gelecek yılın çiçeği zayıf olur."},
+{a:10,g:10,son:20,t:"10-20 Ekim",e:"Yapraklar hâlâ YEŞİL",ad:"Yaprak gübresi",y:P,k:1,
+ u:["Üre 80 kg","Bor 3 kg","Şelatlı çinko 2,5 kg"],
+ s:["Yaprakların hâlâ yeşil olduğundan emin ol. Sarardıysa geç kaldın.","Üreyi ılık suda erit, süzerek dök.","Bor ve şelatlı çinkoyu ekle — üçü aynı depoda karışır.","Sabah serininde YAPRAĞA püskürt."],
+ n:"Toprağa değil, damladan değil. Ağaç bu azotu kış deposuna koyar, martta çiçek açarken harcar. Azot yasağına aykırı değildir."},
+{a:10,g:20,son:31,t:"20-31 Ekim",e:"Yapraklar sarardı",ad:"Toprak gübresi",y:S,
+ u:["Potasyum sülfat 100 kg","TSP 150 kg"],
+ s:["Damla borusunun iki yanına, taç izdüşümüne serp.","Hafif karıştır veya sulamayla yıka.","Azotlu hiçbir şey ekleme."]},
+{a:11,g:5,son:15,t:"5-15 Kasım",e:"Yaprakların yarısı döküldü",ad:"Bakır",y:P,
+ u:["Bakır hidroksit 5 kg"],
+ s:["Yaprakların %50-70'i dökülünce at.","Bakır hidroksit 5 kg, tek başına."],
+ n:"Yaprak dökülünce dalda yara kalır, hastalık kışın oradan girer. Bakır o yaraları kapatır."},
+{a:11,g:20,son:30,t:"20-30 Kasım",e:"Yapraklar tamamen döküldü",ad:"Yaprakları öğüt",y:T,k:1,
+ u:["Üre 70 kg","1 gün traktör"],
+ s:["Yaprakların tamamen dökülmesini bekle.","Parçalayıcıyla sıra altını ve arasını öğüt.","Depoya 2.000 litre su + 70 kg üre.","Memeleri AŞAĞI çevir, ağaca değil yere püskürt."],
+ n:"Karaleke kışı yerdeki yaprakta geçirir. Bu tek iş ilkbahar hastalığını yarıya indirir."},
+{a:12,g:1,son:31,t:"Aralık - Şubat",e:"Kış uykusu",ad:"Budama + temizlik",y:E,
+ u:["3 işçi × 4 gün"],
+ s:["Kuru, siyah, kabuğu çökük dalları sağlam yere kadar kes.","Dipten çıkan sürgünleri dipten al.","Dalda kalmış kurumuş meyveleri tek tek topla.","Hepsini bahçeden çıkar ve YAK.","Makası her ağaçta çamaşır suyuyla sil."],
+ n:"Ağır budama yok — kuvvetli anaçta çok kesmek daha çok sürgün çıkarır."},
+{a:12,g:15,son:31,t:"Aralık - Ocak",e:"Yaprak tamamen döküldü",ad:"Gölleme bulamacı",y:P,k:1,
+ u:["Kükürt 50 kg","Sönmemiş kireç 25 kg"],
+ s:["Yaprak tamamen dökülünce.","Kendi yaptığın bulamacı kışlık dozda at (tarif: Bilgi sayfası).","2.500 litre. Dalı sırılsıklam yap.","İlaçlamadan sonra pülverizatörü bol suyla yıka — gölleme metali aşındırır."],
+ n:"Marttaki yağ ile arasında EN AZ 21 GÜN olacak. Aralık-ocakta atarsan 2 ay var."},
+{a:2,g:1,son:20,t:"1-20 Şubat",e:"Kış uykusu",ad:"Arıcı + bakım",y:Y,k:1,
+ u:["12 kovan"],
+ s:["Arıcıyla YAZILI anlaş — nisanda aramak geçtir.","Şart yaz: kovanlar 3 ayrı gruba dağıtılacak.","Pülverizatör memelerini değiştir.","Damla borularını asitle yıka.","DAL EĞME İPLERİNİ SÖK."]},
+{a:3,g:1,son:10,t:"1-10 Mart",e:"Gözler henüz açılmamış",ad:"Kış yağı",y:P,k:1,
+ u:["Kış yağı 50 litre"],
+ s:["Gözlerin açılmadığından emin ol.","Göllemeden en az 21 gün geçmiş olmalı.","Hava 5°C üstü ve donsuz olsun.","2.500 litre su, karıştırıcı çalışırken yağı yavaşça ekle.","Dalı sırılsıklam yap, damlayacak kadar.","Gövde, çatal ve kabuk çatlaklarını atlama."],
+ n:"Yıl boyu akar ve koşnil mücadelesinin %70'i budur. Yağ zehir değil, boğma yöntemidir — direnç gelişmez."},
+{a:3,g:1,son:15,t:"1-15 Mart",e:"Gözler uyanmamış",ad:"Kök budama",y:T,
+ u:["Yarım gün traktör"],
+ s:["Dipkazan veya kök budama bıçağını tak.","Gövdeden 60-70 cm uzağa hizala.","40-50 cm derine indir.","Sıra boyunca tek geçiş — SADECE BİR TARAFTAN.","Her yıl taraf değiştir.","Sonrasında sulamayı aksatma."],
+ n:"Kök kütlesi azalınca büyüme motoru küçülür, kuvvet elle uğraşmadan düşer."},
+{a:4,g:1,son:8,t:"1-8 Nisan",e:"YEŞİL ROZET",ad:"1. İlaçlama",y:P,k:1,
+ u:["Kaptan 5 kg"],
+ s:["Yapraklar açılıp ortada yeşil tomurcuk topu görününce at.","Kaptan 5 kg, tek başına.","Çiy kalkarken (08:00-10:00)."],
+ n:"Her sabah çiy düştüğü için karaleke yağmur olmadan da bulaşıyor. Yılın en riskli penceresi burasıdır."},
+{a:4,g:10,son:16,t:"10-16 Nisan",e:"PEMBE TOMURCUK",ad:"2. İlaçlama",y:P,k:1,
+ u:["Kaptan 5 kg"],
+ s:["Kaptan 5 kg."],
+ n:"Bu tarihten sonra BAKIR YOK. Bu tarihten sonra BÖCEK İLACI YOK — taç yaprak dökülene kadar."},
+{a:4,g:12,son:18,t:"12-18 Nisan",e:"Tomurcuk pembe",ad:"Bor püskürtmesi",y:P,
+ u:["Bor 3 kg"],
+ s:["Kaptan ilaçlamasından 2 gün sonra at.","TEK BAŞINA — kaptanla karıştırma, bor ilacı bozar.","3 kg bor + yayıcı."],
+ n:"Dozu asla artırma — bor fazlası ağacı kurutur. Bor polen borusunu uzatır; eksikse çiçek açar ama meyve tutmaz."},
+{a:4,g:15,son:22,t:"15-22 Nisan",e:"ÇİÇEKLER AÇIYOR",ad:"Kovanları getir",y:E,k:1,
+ u:["12 kovan"],
+ s:["%5-10 çiçek açınca kovanları getir.","Bahçe içinde 3 ayrı gruba dağıt.","Çiçek dökülünce çıkar.","Sıra arasını çiçeklenmeden önce biç."],
+ n:"BU SÜRE İÇİNDE HİÇ BÖCEK İLACI ATMA. Scarlet kendine kısırdır — arı yoksa hiç meyve tutmaz."},
+{a:5,g:8,son:15,t:"8-15 Mayıs",e:"Sürgünler 5 cm",ad:"3. İlaçlama + Regalis 1",y:P,k:1,
+ u:["Kaptan 5 kg","Regalis ~1-1,5 kg","Akar ilacı 1 doz","Su düzenleyici"],
+ s:["Sürgünlerin 5 cm olduğunu gör, sonra at.","Depoya ÖNCE su düzenleyici koy — kireçli su Regalis'i bozar.","Regalis'i ekle.","Kaptanı lapa yapıp ekle.","Akar ilacını ekle.","Suyu tamamla, yayıcı en son."],
+ n:"BU DEPOYA KALSİYUM KOYMA — kalsiyum Regalis'i etkisizleştirir."},
+{a:5,g:20,son:31,t:"20-31 Mayıs",e:"Meyve fındık büyüklüğünde",ad:"Meyve seyreltme",y:E,k:1,
+ u:["7 işçi × 5 gün"],
+ s:["Meyve 10-15 mm olunca başla.","Bir demette 4-5 elma olur — ortadaki en büyüğünü bırak.","Diğerlerini kopar.","Bıraktıkların arası bir karış (15 cm).","Çürük, lekeli, çarpık olanı bırakma.","Genç ağaçlarda daha sert seyrelt."],
+ n:"Seyreltmezsen meyve küçük kalır ve ertesi yıl bahçe boş geçer."},
+{a:5,g:25,son:31,t:"25-31 Mayıs",e:"Meyve tutumu +2-3 hafta",ad:"4. İlaçlama + Kalsiyum 1",y:P,
+ u:["Kaptan 5 kg","Kalsiyum 10 kg"],
+ s:["Depoyu yarıya doldur, karıştırıcıyı aç.","ÖNCE kalsiyum 10 kg (gübre olduğu için önce girer).","SONRA kaptan 5 kg, kovada lapa yapılmış.","Suyu tamamla, yayıcı en son.","08:00-10:00 arası. Öğle sıcağında asla."],
+ n:"Kalsiyum programı burada başlar: toplam 4 uygulama. Damladan verilirse meyveye ulaşmaz."},
+{a:6,g:1,son:10,t:"1-10 Haziran",e:"Regalis 1'den 3-4 hafta sonra",ad:"5. İlaçlama + Regalis 2",y:P,k:1,
+ u:["Kaptan 5 kg","Regalis ~1-1,5 kg","Coragen 400 cc"],
+ s:["Su düzenleyici → Regalis → kaptan → içkurdu ilacı → yayıcı.","Yine kalsiyum yok.","İki Regalis uygulaması yeterlidir."]},
+{a:6,g:1,son:25,t:"1-25 Haziran",e:"Ceviz büyüklüğü",ad:"Damla gübre",y:D,
+ u:["Amonyum sülfat 250 kg","Potasyum sülfat 100 kg"],
+ s:["Bahçeye bak: meyve iyi tuttu mu?","Tuttuysa azot ver. Tutmadıysa azotu atla, sadece potasyum ver.","Aylık miktarı haftalık dozlara böl.","Sulamanın son üçte birinde ver, sonra boruları 20-30 dk yıka."],
+ n:"30 Haziran'da azot her halükârda biter."},
+{a:6,g:15,son:22,t:"15-22 Haziran",e:"Ceviz büyüklüğü",ad:"6. İlaçlama + Kalsiyum 2",y:P,
+ u:["Kaptan 5 kg","Kalsiyum 10 kg"],
+ s:["Kalsiyum 1'den 14 gün sonra.","Önce kalsiyum, sonra kaptan, en son yayıcı."]},
+{a:7,g:1,son:8,t:"1-8 Temmuz",e:"Meyve irileşiyor",ad:"7. İlaçlama + Kalsiyum 3",y:P,
+ u:["Kaptan 5 kg","Kalsiyum 10 kg","Delegate 500 cc"],
+ s:["Önce kalsiyum, sonra kaptan, sonra içkurdu ilacı, en son yayıcı.","İçkurdu ilacı haziranda kullandığından FARKLI GRUP olacak."],
+ n:"Bu aydan sonra hasat aralığına dikkat — kutudaki 'hasada kaç gün kala' yazısı."},
+{a:7,g:1,son:31,t:"Temmuz boyunca",e:"Meyve irileşiyor",ad:"Damla potasyum",y:D,
+ u:["Potasyum sülfat 100 kg"],
+ s:["Damladan ver, haftalık dozlara bölerek.","Sulamanın son üçte birinde, sonra boruları yıka."],
+ n:"Potasyum yapraktaki şekeri meyveye taşıyan kamyondur."},
+{a:7,g:10,son:20,t:"10-20 Temmuz",e:"Sürgün yavaşlıyor",ad:"Yaz budaması",y:E,
+ u:["3 işçi × 2 gün"],
+ s:["Sadece dikey obur dalları dipten al.","Kırmızı şeritli aşı dallarına dokunma.","Toplu yaprak alma — güneş yanığı olur."]},
+{a:8,g:1,son:10,t:"1-10 Ağustos",e:"Meyve irileşiyor",ad:"8. İlaçlama + Kalsiyum 4",y:P,k:1,
+ u:["Kaptan 5 kg","Kalsiyum 10 kg"],
+ s:["Sezonun son kalsiyumu, hasada 3-4 hafta kala.","Önce kalsiyum, sonra kaptan, en son yayıcı.","Hasat aralığını mutlaka kontrol et."],
+ n:"Geç dönem kalsiyumu acı beneğe karşı en etkili olanıdır."}
+];
+
+/* ---------- KARIŞIM ---------- */
+const URUNLER=["Kaptan","Bakır","Gölleme bulamacı","Kış yağı","Kükürt","Kalsiyum","Bor","Şelatlı çinko","Regalis","Akar ilacı","Coragen / Delegate","Üre (yaprak)","Yayıcı"];
+const YASAK={
+ "Kış yağı|Kükürt":["21 GÜN ARA","Şiddetli yaprak yanığı yapar"],
+ "Kış yağı|Gölleme bulamacı":["21 GÜN ARA","Şiddetli yanık — ikisini de kullanıyorsunuz, dikkat"],
+ "Kış yağı|Kaptan":["14 GÜN ARA","Yaprak yanığı"],
+ "Bakır|Kaptan":["7-10 GÜN ARA","Yaprak ve meyve yanığı"],
+ "Bor|Kaptan":["AYRI GEÇ","Bor kaptanı depoda bozar — boş su atmış olursunuz"],
+ "Bor|Şelatlı çinko":["KARIŞIR","Şelatlı olduğu için sorun yok. Çinko sülfat karışmaz"],
+ "Kalsiyum|Regalis":["AYRI GEÇ","Kalsiyum Regalis'i etkisizleştirir"],
+ "Kalsiyum|Kükürt":["AYRI GEÇ","Alçı çöker, depo ve memeler tıkanır"],
+ "Gölleme bulamacı|Kaptan":["AYRI GEÇ","Gölleme tek başına atılır"],
+ "Gölleme bulamacı|Bakır":["AYRI GEÇ","İkisi de kışlık, aynı depoya konmaz"]
+};
+function karisimSor(a,b){
+  if(!a||!b)return null;
+  if(a===b)return["—","Aynı ürünü iki kez seçtiniz"];
+  const k1=a+"|"+b,k2=b+"|"+a;
+  if(YASAK[k1])return YASAK[k1];
+  if(YASAK[k2])return YASAK[k2];
+  if(a==="Gölleme bulamacı"||b==="Gölleme bulamacı")return["AYRI GEÇ","Gölleme hiçbir şeyle karışmaz"];
+  if(a==="Bakır"||b==="Bakır")return["AYRI GEÇ","Bakır tek başına atılır"];
+  return["KARIŞIR","Aynı depoya konabilir. Sıra: gübre → toz ilaç → sıvı ilaç → yayıcı"];
+}
+
+/* ---------- KAYIT ---------- */
+let bitti={};
+try{bitti=JSON.parse(localStorage.getItem("bahce_bitti")||"{}")}catch(e){bitti={}}
+function kaydet(){try{localStorage.setItem("bahce_bitti",JSON.stringify(bitti))}catch(e){}}
+
+/* ---------- ÇİZ ---------- */
+const TIK='<svg viewBox="0 0 24 24"><path d="M4 12l5 5L20 6"/></svg>';
+function rozetSinif(y){return y==="Püskürtme"?"p":y==="Damla"||y==="Serpme"?"d":y==="—"?"":"e"}
+function kart(i,idx){
+  const id="i"+idx, ok=bitti[id];
+  return `<article class="is ${i.k?'kritik':''} ${ok?'bitti':''}" data-id="${id}">
+   <div class="is-bas">
+     <div class="kutu ${ok?'dolu':''}" data-tik="1" role="checkbox" aria-checked="${ok?'true':'false'}" tabindex="0">${TIK}</div>
+     <div class="is-ort">
+       <div class="is-tarih">${i.t}${i.yil?' · '+i.yil:''}</div>
+       <div class="is-ad">${i.ad}</div>
+       <div><span class="rozet ${rozetSinif(i.y)}">${i.y}</span><span class="rozet">${i.e}</span></div>
+     </div>
+     <div class="ok">›</div>
+   </div>
+   <div class="is-ic">
+     ${i.u?`<div class="urunler"><b>Ne alınacak</b>${i.u.join(' · ')}</div>`:''}
+     <ol>${i.s.map(x=>`<li>${x}</li>`).join('')}</ol>
+     ${i.n?`<div class="neden"><b>Dikkat:</b> ${i.n}</div>`:''}
+   </div></article>`;
+}
+function gunNo(a,g){return a*100+g}
+function ciz(){
+  const bugun=new Date(), bg=gunNo(bugun.getMonth()+1,bugun.getDate());
+  const ei=evreIndeks(bugun);
+  document.getElementById("evreAd").textContent=EVRELER[ei].ad;
+  document.getElementById("serit").innerHTML=EVRELER.map((e,i)=>
+    `<i class="${i<ei?'gecti':i===ei?'simdi':''}" title="${e.ad}"></i>`).join('');
+
+  const puan=i=>{let b=gunNo(i.a,i.g);let d=b-bg;if(d<-40)d+=1200;return d};
+  const sirali=ISLER.map((i,x)=>({i,x,d:puan(i)})).sort((a,b)=>a.d-b.d);
+  const simdi=sirali.filter(o=>o.d<=6&&o.d>=-25);
+  const sonra=sirali.filter(o=>!simdi.includes(o)).slice(0,4);
+
+  document.getElementById("listBugun").innerHTML = simdi.length
+    ? simdi.map(o=>kart(o.i,o.x)).join('')
+    : `<div class="kutucuk"><p class="ac" style="margin:0">Bu hafta yapılacak iş yok. Sıradakine bakın.</p></div>`;
+  document.getElementById("listSonra").innerHTML = sonra.map(o=>kart(o.i,o.x)).join('');
+
+  const AYLAR=["","OCAK","ŞUBAT","MART","NİSAN","MAYIS","HAZİRAN","TEMMUZ","AĞUSTOS","EYLÜL","EKİM","KASIM","ARALIK"];
+  let h="",son=-1;
+  ISLER.map((i,x)=>({i,x})).sort((a,b)=>gunNo(a.i.a,a.i.g)-gunNo(b.i.a,b.i.g)).forEach(o=>{
+    if(o.i.a!==son){h+=`<h2 class="bolum" id="ay-${o.i.a}">${AYLAR[o.i.a]}</h2>`;son=o.i.a}
+    h+=kart(o.i,o.x);
+  });
+  document.getElementById("listTakvim").innerHTML=h;
+}
+ciz();
+
+/* ---------- OLAYLAR ---------- */
+document.addEventListener("click",ev=>{
+  const kutu=ev.target.closest("[data-tik]");
+  if(kutu){
+    ev.stopPropagation();
+    const k=kutu.closest(".is"), id=k.dataset.id;
+    bitti[id]=!bitti[id]; kaydet();
+    document.querySelectorAll(`[data-id="${id}"]`).forEach(el=>{
+      el.classList.toggle("bitti",!!bitti[id]);
+      const b=el.querySelector(".kutu");
+      b.classList.toggle("dolu",!!bitti[id]);
+      b.setAttribute("aria-checked",bitti[id]?"true":"false");
+    });
+    return;
+  }
+  const bas=ev.target.closest(".is-bas");
+  if(bas){bas.parentElement.classList.toggle("acik")}
+});
+document.addEventListener("keydown",ev=>{
+  if((ev.key===" "||ev.key==="Enter")&&ev.target.dataset.tik){ev.preventDefault();ev.target.click()}
+});
+
+document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()=>{
+  document.querySelectorAll("nav button").forEach(x=>x.classList.remove("act"));
+  document.querySelectorAll(".sayfa").forEach(x=>x.classList.remove("act"));
+  b.classList.add("act");
+  document.getElementById("s-"+b.dataset.s).classList.add("act");
+  window.scrollTo({top:0,behavior:"instant"});
+}));
+
+/* ---------- HESAP ---------- */
+const et=document.getElementById("etiket"), dp=document.getElementById("depo"), ds=document.getElementById("dozSonuc");
+function doz(){
+  const v=parseFloat(et.value), l=parseFloat(dp.value);
+  if(!v||v<=0){ds.className="sonuc";ds.innerHTML='<div class="buyuk">—</div><div class="kucuk">Etiket dozunu girin</div>';return}
+  const t=v*l/100;
+  const yazi = t>=1000 ? (t/1000).toFixed(t%1000?2:0).replace('.',',')+" kg / litre"
+                       : Math.round(t).toLocaleString("tr-TR")+" gram / cc";
+  ds.className="sonuc iyi";
+  ds.innerHTML=`<div class="buyuk">${yazi}</div><div class="kucuk">${l.toLocaleString("tr-TR")} litre için · ${v} × ${l/100}</div>`;
+}
+et.addEventListener("input",doz); dp.addEventListener("change",doz);
+
+const u1=document.getElementById("u1"),u2=document.getElementById("u2"),ks=document.getElementById("karisimSonuc");
+[u1,u2].forEach((s,n)=>{
+  s.innerHTML='<option value="">Seçin…</option>'+URUNLER.map(u=>`<option>${u}</option>`).join('');
+  s.addEventListener("change",karisim);
+});
+function karisim(){
+  const r=karisimSor(u1.value,u2.value);
+  if(!r){ks.className="sonuc";ks.innerHTML='<div class="buyuk">—</div><div class="kucuk">İki ürün seçin</div>';return}
+  ks.className="sonuc "+(r[0]==="KARIŞIR"?"iyi":r[0]==="—"?"":"uyari");
+  ks.innerHTML=`<div class="buyuk" style="font-size:26px">${r[0]}</div><div class="kucuk">${r[1]}</div>`;
+}
+
+/* ---------- YARDIMCI ---------- */
+function trNum(v,dec){return v.toLocaleString("tr-TR",{maximumFractionDigits:dec})}
+
+/* ---------- YIL HARİTASI ---------- */
+const AY_KISA=["","OCAK","ŞUBAT","MART","NİSAN","MAYIS","HAZ.","TEM.","AĞU.","EYLÜL","EKİM","KASIM","ARA."];
+function yilCiz(){
+  const el=document.getElementById("yilHarita"); if(!el)return;
+  const suAy=new Date().getMonth()+1;
+  let html="";
+  for(let a=1;a<=12;a++){
+    const noktalar=ISLER.filter(i=>i.a===a).map(i=>`<i class="${rozetSinif(i.y)}" title="${i.ad}"></i>`).join("");
+    html+=`<div class="ayk ${a===suAy?"simdi":""}" data-ay="${a}"><b>${AY_KISA[a]}</b><div class="noktalar">${noktalar}</div></div>`;
+  }
+  el.innerHTML=html;
+  el.addEventListener("click",ev=>{
+    const k=ev.target.closest(".ayk"); if(!k)return;
+    const hedef=document.getElementById("ay-"+k.dataset.ay);
+    if(hedef)hedef.scrollIntoView({behavior:"smooth",block:"start"});
+  });
+}
+yilCiz();
+
+/* ---------- REÇETELER ---------- */
+const RECETELER=[
+{ad:"Kaptan tek — Yeşil rozet / Pembe tomurcuk / Hasat sonrası",L:2000,u:[["Kaptan — kovada lapa yap",5,"kg"],["Yayıcı — EN SON",500,"cc"]],n:"Çiy kalkarken atın (08:00-10:00)."},
+{ad:"Bor püskürtmesi — Nisan",L:2000,u:[["Bor (Etidot-67 / Solubor)",3,"kg"],["Yayıcı — EN SON",500,"cc"]],n:"TEK BAŞINA — kaptanla karıştırmayın, bor kaptanı depoda bozar. Dozu asla artırmayın."},
+{ad:"Kaptan + Regalis 1 + akar — Mayıs",L:2000,u:[["Su düzenleyici — İLK GİRER",null,"etikete göre"],["Regalis",1.25,"kg"],["Kaptan — kovada lapa yap",5,"kg"],["Akar ilacı (Nissorun / Zoom)",null,"etikete göre"],["Yayıcı — EN SON",500,"cc"]],n:"BU DEPOYA KALSİYUM KONMAZ — kalsiyum Regalis'i etkisizleştirir. Kayseri suyu kireçlidir, su düzenleyici şart."},
+{ad:"Kaptan + Regalis 2 + Coragen — Haziran",L:2000,u:[["Su düzenleyici — İLK GİRER",null,"etikete göre"],["Regalis",1.25,"kg"],["Kaptan — kovada lapa yap",5,"kg"],["Coragen",400,"cc"],["Yayıcı — EN SON",500,"cc"]],n:"Yine kalsiyum yok. Regalis 1'den 3-4 hafta sonra."},
+{ad:"Kaptan + Kalsiyum — Mayıs sonu / Haziran / Ağustos",L:2000,u:[["Kalsiyum klorür — ÖNCE girer",10,"kg"],["Kaptan — kovada lapa yap",5,"kg"],["Yayıcı — EN SON",500,"cc"]],n:"Öğle sıcağında atmayın. Regalis ile aynı depoya konmaz. Damladan verilmez."},
+{ad:"Kaptan + Kalsiyum + Delegate — Temmuz",L:2000,u:[["Kalsiyum klorür — ÖNCE girer",10,"kg"],["Kaptan — kovada lapa yap",5,"kg"],["Delegate",500,"cc"],["Yayıcı — EN SON",500,"cc"]],n:"İçkurdu ilacı hazirandakinden FARKLI grup olacak. Hasat aralığını kontrol edin."},
+{ad:"Kaptan + akar ilacı — Temmuz (2026)",L:2000,u:[["Kaptan — kovada lapa yap",5,"kg"],["Akar ilacı (Nissorun / Zoom)",null,"etikete göre"],["Yayıcı — EN SON",500,"cc"]],n:"Yaprağın ALTINI ıslatın. Meyve varsa akar ilacının hasat aralığını kontrol edin."},
+{ad:"Yaprak gübresi — Ekim",L:2000,u:[["Üre — ılık suda eritip süz",80,"kg"],["Bor",3,"kg"],["Şelatlı çinko",2.5,"kg"]],n:"Yapraklar hâlâ YEŞİLKEN, yaprağa püskürtün. Üçü aynı depoda karışır."},
+{ad:"Bakır — Kasım",L:2000,u:[["Bakır hidroksit",5,"kg"]],n:"Tek başına. Yaprakların %50-70'i dökülünce. Fare kulağından sonra ASLA."},
+{ad:"Yere üre — yaprak öğütme, Kasım",L:2000,u:[["Üre",70,"kg"]],n:"Memeleri AŞAĞI çevirin — ağaca değil yerdeki öğütülmüş yaprağa."},
+{ad:"Gölleme bulamacı — kışlık, Aralık",L:2500,u:[["Gölleme bulamacı (100 L suya 8-10 L)",225,"L"]],n:"Hiçbir şeyle karışmaz. Sonrasında pülverizatörü bol suyla yıkayın — gölleme metali aşındırır. Tarif Bilgi sayfasında."},
+{ad:"Kış yağı — Mart",L:2500,u:[["Kış yağı — karıştırıcı çalışırken yavaşça",50,"L"]],n:"Tek başına. Göllemeden en az 21 gün geçmiş olacak. Hava 5°C üstü ve donsuz. Dalı sırılsıklam yapın."}
+];
+function olcek(u,litre,baseL){
+  const ad=u[0],mik=u[1],birim=u[2];
+  if(mik==null)return[ad,"etikete göre"];
+  const v=mik*litre/baseL;
+  if(birim==="kg"){if(v<1)return[ad,trNum(v*1000,0)+" g"];return[ad,trNum(v,v<10?2:1)+" kg"]}
+  if(birim==="cc"){if(v>=1000)return[ad,trNum(v/1000,2)+" litre"];return[ad,trNum(v,0)+" cc"]}
+  if(birim==="L"){if(v<1)return[ad,trNum(v*1000,0)+" cc"];return[ad,trNum(v,v<10?1:0)+" litre"]}
+  return[ad,trNum(v,1)+" "+birim];
+}
+const recIs=document.getElementById("recIs"),recDepo=document.getElementById("recDepo"),
+      recOzel=document.getElementById("recOzel"),recSonuc=document.getElementById("recSonuc");
+recIs.innerHTML='<option value="">Seçin…</option>'+RECETELER.map((r,i)=>`<option value="${i}">${r.ad}</option>`).join("");
+function recLitre(){
+  if(recDepo.value==="ozel"){const v=parseFloat(recOzel.value);return v>=50?v:0}
+  return parseFloat(recDepo.value);
+}
+function recCiz(){
+  recOzel.hidden=recDepo.value!=="ozel";
+  const r=RECETELER[+recIs.value],L=recLitre();
+  if(recIs.value===""||!r||!L){recSonuc.innerHTML="";return}
+  const rows=r.u.map((u,n)=>{const s=olcek(u,L,r.L);return`<tr><td>${n+1}. ${s[0]}</td><td class="sag">${s[1]}</td></tr>`}).join("");
+  const oran=r.L/L;let dip;
+  if(Math.abs(oran-1)<0.01)dip=`Tam uygulama = 1 depo (${trNum(r.L,0)} litre).`;
+  else if(oran>1){const tam=Math.floor(oran+1e-9),kalan=Math.round(r.L-tam*L);
+    dip=`Tam uygulama ${trNum(r.L,0)} litredir: ${tam} tam depo${kalan>0?` + ${trNum(kalan,0)} litre`:""}. Son depoyu eksik dolduracaksanız miktarları da o oranda azaltın.`}
+  else dip=`Deponuz (${trNum(L,0)} L) tam uygulamadan (${trNum(r.L,0)} L) büyük — depoyu ${trNum(r.L,0)} litreye kadar doldurun, tabloyu ${trNum(r.L,0)} litre seçerek okuyun.`;
+  recSonuc.innerHTML=`<table><tr><th>Sıra ile depoya</th><th style="text-align:right">${trNum(L,0)} litre için</th></tr>${rows}</table>
+   <div class="neden" style="margin-top:12px"><b>${dip}</b> Karıştırıcı depo boşalana kadar durmaz. Karışım hazırlandığı gün biter, depoda gecelemez.</div>
+   ${r.n?`<div class="neden" style="background:var(--bakir-zemin);margin-top:10px"><b>Dikkat:</b> ${r.n}</div>`:""}`;
+}
+recIs.addEventListener("change",recCiz);
+recDepo.addEventListener("change",recCiz);
+recOzel.addEventListener("input",recCiz);
+
+/* ---------- KAYIT DEFTERİ ---------- */
+let kayitlar=[];
+try{kayitlar=JSON.parse(localStorage.getItem("bahce_kayitlar")||"[]")}catch(e){kayitlar=[]}
+function kytSakla(){try{localStorage.setItem("bahce_kayitlar",JSON.stringify(kayitlar))}catch(e){}}
+function tarihTR(iso){if(!iso)return"—";const q=iso.split("-");return q[2]+"."+q[1]+"."+q[0]}
+const kytTarih=document.getElementById("kytTarih"),kytIs=document.getElementById("kytIs"),
+      kytUrun=document.getElementById("kytUrun"),kytSu=document.getElementById("kytSu"),
+      kytNot=document.getElementById("kytNot"),kytListe=document.getElementById("kytListe");
+(function(){const d=new Date();kytTarih.value=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")})();
+kytIs.innerHTML='<option value="">Seçin veya elle yazın…</option>'
+ +RECETELER.map((r,i)=>`<option value="${i}">${r.ad}</option>`).join("")
+ +'<option value="diger">Diğer (elle yaz)</option>';
+kytIs.addEventListener("change",()=>{
+  const r=RECETELER[+kytIs.value];
+  if(kytIs.value!==""&&kytIs.value!=="diger"&&r){
+    kytUrun.value=r.u.map(u=>{const s=olcek(u,r.L,r.L);const ad=s[0].replace(/\s+—.*$/,"").replace(/\s*\(.*?\)/g,"");return ad+" "+s[1]}).join(" + ");
+    kytSu.value=r.L;
+  }else{kytUrun.value="";}
+});
+let kytSilBekleyen=-1,kytSilZaman=null;
+function kytCiz(){
+  kayitlar.sort((a,b)=>(b.t||"").localeCompare(a.t||""));
+  document.getElementById("kytSayi").textContent=kayitlar.length?kayitlar.length+" kayıt.":"Henüz kayıt yok.";
+  kytListe.innerHTML=kayitlar.map((k,i)=>`<div class="kyt">
+   <div class="kyt-ust"><b>${tarihTR(k.t)}</b><span>${k.L?trNum(+k.L,0)+" litre":""}</span></div>
+   <div class="kyt-ad">${k.ad}</div>
+   ${k.u?`<div class="kyt-u">${k.u}</div>`:""}
+   ${k.n?`<div class="kyt-u">Not: ${k.n}</div>`:""}
+   <button class="kyt-sil" data-sil="${i}">Sil</button></div>`).join("");
+}
+kytCiz();
+document.getElementById("kytEkle").addEventListener("click",()=>{
+  const secili=kytIs.options[kytIs.selectedIndex];
+  const ad=(kytIs.value!==""&&kytIs.value!=="diger")?secili.text:(kytUrun.value?"İlaçlama":"");
+  if(!kytTarih.value||(!ad&&!kytUrun.value))return;
+  kayitlar.push({t:kytTarih.value,ad:ad||"İlaçlama",u:kytUrun.value.trim(),L:kytSu.value,n:kytNot.value.trim()});
+  kytSakla();kytCiz();
+  kytNot.value="";
+  const b=document.getElementById("kytEkle");b.textContent="Kaydedildi ✓";b.classList.add("tamam");
+  setTimeout(()=>{b.textContent="Kaydet";b.classList.remove("tamam")},1600);
+});
+kytListe.addEventListener("click",ev=>{
+  const b=ev.target.closest("[data-sil]");if(!b)return;
+  const i=+b.dataset.sil;
+  if(kytSilBekleyen===i){
+    clearTimeout(kytSilZaman);kytSilBekleyen=-1;
+    kayitlar.splice(i,1);kytSakla();kytCiz();
+  }else{
+    kytSilBekleyen=i;b.textContent="Emin misiniz? Tekrar dokunun";b.classList.add("onay");
+    clearTimeout(kytSilZaman);
+    kytSilZaman=setTimeout(()=>{kytSilBekleyen=-1;kytCiz()},2500);
+  }
+});
+document.getElementById("kytPaylas").addEventListener("click",async()=>{
+  const b=document.getElementById("kytPaylas");
+  if(!kayitlar.length){b.textContent="Önce kayıt ekleyin";setTimeout(()=>b.textContent="Kayıtları paylaş / kopyala",1600);return}
+  const m="SCARLET ELMA BAHÇESİ — İLAÇLAMA KAYIT DEFTERİ\nYahyalı / Kopçu · 16 dekar · 2.750 ağaç\n\n"
+   +kayitlar.map(k=>tarihTR(k.t)+" — "+k.ad
+     +(k.u?"\n  Atılan: "+k.u:"")
+     +(k.L?"\n  Su: "+trNum(+k.L,0)+" litre":"")
+     +(k.n?"\n  Not: "+k.n:"")).join("\n\n");
+  if(navigator.share){try{await navigator.share({title:"İlaçlama kayıtları",text:m});return}catch(e){if(e&&e.name==="AbortError")return}}
+  try{await navigator.clipboard.writeText(m);b.textContent="Kopyalandı ✓ — WhatsApp'a yapıştırın";}
+  catch(e){b.textContent="Kopyalanamadı";}
+  setTimeout(()=>b.textContent="Kayıtları paylaş / kopyala",2500);
+});
+
+/* ---------- ÇEVRİMDIŞI + KURULUM İSTEMİ ---------- */
+if("serviceWorker" in navigator&&(location.protocol==="https:"||location.hostname==="localhost"||location.hostname==="127.0.0.1")){
+  window.addEventListener("load",()=>{navigator.serviceWorker.register("sw.js").catch(()=>{})});
+}
+let kurulumOlayi=null;
+window.addEventListener("beforeinstallprompt",e=>{
+  e.preventDefault();kurulumOlayi=e;
+  const kart=document.getElementById("kurKart"),b=document.getElementById("kurSimdi");
+  if(b){b.hidden=false}
+  if(kart&&!document.body.classList.contains("tamekran")){kart.hidden=false}
+});
+document.getElementById("kurSimdi").addEventListener("click",()=>{
+  if(kurulumOlayi){kurulumOlayi.prompt();kurulumOlayi=null;document.getElementById("kurSimdi").hidden=true}
+});
+
+/* ---------- KURULUM ---------- */
+(function(){
+  var standalone = window.matchMedia('(display-mode: standalone)').matches
+                || window.navigator.standalone === true;
+  if(standalone){ document.body.classList.add('tamekran'); }
+
+  var ios = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  var adimlar = ios
+    ? ['Alttaki <b>Paylaş</b> düğmesine dokunun (yukarı oklu kare).',
+       '<b>Ana Ekrana Ekle</b> seçeneğini bulun.',
+       'Sağ üstten <b>Ekle</b> deyin.',
+       'Ana ekranda elma simgesi çıkar — oradan açın.']
+    : ['Sağ üstteki <b>üç noktaya</b> dokunun.',
+       '<b>Ana ekrana ekle</b> seçeneğini bulun.',
+       '<b>Ekle</b> deyin.',
+       'Ana ekranda elma simgesi çıkar — oradan açın.'];
+
+  var a1 = document.getElementById('kurAdim');
+  if(a1) a1.innerHTML = adimlar.map(function(x){return '<li>'+x+'</li>'}).join('');
+  var a2 = document.getElementById('kurAdim2');
+  if(a2) a2.innerHTML = adimlar.map(function(x){return '<li>'+x+'</li>'}).join('');
+
+  var gizli = false;
+  try{ gizli = localStorage.getItem('bahce_kur_gizle') === '1'; }catch(e){}
+  var kart = document.getElementById('kurKart');
+  if(kart && !standalone && !gizli){ kart.hidden = false; }
+
+  var kapat = document.getElementById('kurKapat');
+  if(kapat) kapat.addEventListener('click', function(){
+    kart.hidden = true;
+    try{ localStorage.setItem('bahce_kur_gizle','1'); }catch(e){}
+  });
+})();
+</script>
+</body>
+</html>
